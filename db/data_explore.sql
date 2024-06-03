@@ -81,7 +81,15 @@ describe tb_mesa;
 select count(*) from tb_mesa where num_pessoa_mesa >1;
 
 #Qual o período do ano em que o restaurante tem maior movimento
--- ???
+
+SELECT year(data_hora_entrada) as ano, month(data_hora_entrada) as mês, count(num_pessoa_mesa) as pessoas
+FROM
+tb_mesa
+GROUP BY
+ano,mês
+ORDER BY
+pessoas DESC
+limit 1;
 
 # Quantas mesas estão em dupla no dia dos namorados ?
 select count(*),year(data_hora_entrada)
@@ -140,7 +148,37 @@ limit 10
 tb_top10_major_consumer_per_year;
 
 # Qual o cliente que mais fez pedidos por ano
--- ??
+
+select * 
+from (
+(select year(tb_mesa.data_hora_entrada) as ano, cliente.id_cliente , cliente.nome_cliente , sum(tb_pedido.quantidade_pedido) as qtd_pedidos 
+from tb_cliente cliente
+join tb_mesa on cliente.id_cliente = tb_mesa.id_cliente
+join tb_pedido on tb_mesa.codigo_mesa  = tb_pedido.codigo_mesa
+where year(tb_mesa.data_hora_entrada) = 2022
+group by cliente.id_cliente,ano,cliente.nome_cliente
+order by qtd_pedidos desc
+limit 1)
+union
+(select year(tb_mesa.data_hora_entrada) as ano, cliente.id_cliente , cliente.nome_cliente , sum(tb_pedido.quantidade_pedido) as qtd_pedidos 
+from tb_cliente cliente
+join tb_mesa on cliente.id_cliente = tb_mesa.id_cliente
+join tb_pedido on tb_mesa.codigo_mesa  = tb_pedido.codigo_mesa
+where year(tb_mesa.data_hora_entrada) = 2023
+group by cliente.id_cliente,ano,cliente.nome_cliente
+order by qtd_pedidos desc
+limit 1)
+union(
+select year(tb_mesa.data_hora_entrada) as ano, cliente.id_cliente , cliente.nome_cliente , sum(tb_pedido.quantidade_pedido) as qtd_pedidos 
+from tb_cliente cliente
+join tb_mesa on cliente.id_cliente = tb_mesa.id_cliente
+join tb_pedido on tb_mesa.codigo_mesa  = tb_pedido.codigo_mesa
+where year(tb_mesa.data_hora_entrada) = 2024
+group by cliente.id_cliente,ano,cliente.nome_cliente
+order by qtd_pedidos desc
+limit 1
+)) as
+tb_top_clients_consumer_per_year;
 
 # Qual o cliente que mais gastou em todos os anos
 -- ??
