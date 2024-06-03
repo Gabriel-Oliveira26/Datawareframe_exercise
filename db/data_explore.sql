@@ -81,7 +81,7 @@ describe tb_mesa;
 select count(*) from tb_mesa where num_pessoa_mesa >1;
 
 #Qual o período do ano em que o restaurante tem maior movimento
-
+-- Resposta questão 1
 SELECT year(data_hora_entrada) as ano, month(data_hora_entrada) as mês, count(num_pessoa_mesa) as pessoas
 FROM
 tb_mesa
