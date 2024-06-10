@@ -181,4 +181,19 @@ limit 1
 tb_top_clients_consumer_per_year;
 
 # Qual o cliente que mais gastou em todos os anos
--- ??
+
+select 
+cliente.id_cliente, cliente.nome_cliente, sum(tb_pedido.quantidade_pedido * tb_prato.preco_unitario_prato) as valor_gasto
+from 
+tb_cliente cliente
+join 
+tb_mesa on cliente.id_cliente = tb_mesa.id_cliente
+join 
+tb_pedido on tb_mesa.codigo_mesa = tb_pedido.codigo_mesa
+join 
+tb_prato on tb_pedido.codigo_prato = tb_prato.codigo_prato
+group by 
+cliente.id_cliente, cliente.nome_cliente
+order by 
+valor_gasto desc
+limit 1;
